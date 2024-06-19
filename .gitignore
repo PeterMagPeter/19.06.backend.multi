@@ -1,5 +1,5 @@
 # Ignore typical output directories
-dist
+
 target
 out
 build
