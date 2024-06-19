@@ -1,0 +1,33 @@
+# Ignore typical output directories
+dist
+target
+out
+build
+.webpack
+# Node.js specific
+node_modules
+# Cache directories
+.npm
+.eslintcache
+.tsbuildinfo
+# macos specific files
+.DS_Store
+# test output
+junit.xml
+coverage
+# mongodb
+mongodata
+mongodatatest
+# ignore log files
+*.log
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env
+
+#other
+package-lock.json 

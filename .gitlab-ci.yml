@@ -1,0 +1,30 @@
+# Template for node see:
+# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Nodejs.gitlab-ci.yml
+# Coverage see:
+# https://gist.github.com/rishitells/3c4536131819cff4eba2c8ab5bbb4570
+
+image: node:20
+
+stages:
+  - test
+
+javascript:
+  stage: test
+  variables:
+    # BHT's Gitlab CI only supports MongoDB up to 4.4.6
+    MONGOMS_VERSION: "4.4.6"
+    # Do not remove libssl1.1_1.1.1f-1ubuntu2_amd64.deb if present
+    GIT_CLEAN_FLAGS: -ffdx -e libssl1.1_1.1.1f-1ubuntu2_amd64.deb
+  script:
+    # Problem with libcrypto.so.1.1
+    # https://github.com/nodkz/mongodb-memory-server/issues/480#issuecomment-1488548395
+    - if [ ! -f "libssl1.1_1.1.1f-1ubuntu2_amd64.deb" ]; then wget -q http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb; fi 
+    - dpkg -i libssl1.1_1.1.1f-1ubuntu2_amd64.deb
+    # ci is like install, but faster (and we need a synchronized package-lock.json)
+    - npm install # mongoose@7.1.0 mongodb-memory-server@8.12.2 # BHT's Gitlab CI only supports MongoDB up to 4.4.6 (i.e. Mongoose 7.0)
+    # - npm run build # we use ts-jest, no need for compilation
+    - npm test
+  artifacts:
+    reports:
+      junit:
+        - junit.xml
